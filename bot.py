@@ -1,6 +1,6 @@
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from handlers import start
+from handlers import start, club
 import settings
 
 logging.basicConfig(filename='bot_log', level=logging.INFO)
@@ -10,6 +10,7 @@ def main():
 
     dp = my_bot.dispatcher
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('Club', club))
 
     logging.info('Бот стартовал')
 
