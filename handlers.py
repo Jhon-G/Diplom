@@ -1,15 +1,11 @@
-<<<<<<< HEAD
 import vk
 import settings
-=======
->>>>>>> 2b8be6dc5c33983cf4c10d19408d521e47538c60
 
 def start(update, context):
     print('Вазван/Start')
     user_name = update.effective_user.first_name
     update.message.reply_text(
         f'Привет {user_name}!'
-<<<<<<< HEAD
     )
 
 def club(update, context):
@@ -21,6 +17,3 @@ def club(update, context):
         res = api.wall.get(domain='mutabor.moscow', count= 1)
         result = res['items'][0]['text']
         update.message.reply_text(result)
-=======
-    )
->>>>>>> 2b8be6dc5c33983cf4c10d19408d521e47538c60
