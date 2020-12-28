@@ -12,105 +12,19 @@ INFO:root:Бот стартовал
 INFO:apscheduler.scheduler:Scheduler started
 INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
 INFO:apscheduler.scheduler:Scheduler has been shut down
+WARNING:telegram.ext.updater:Exiting immediately!
 INFO:root:Бот стартовал
 INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 14, in club
-    session = vk.Session(access_token=token)
-NameError: name 'token' is not defined
 INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
 INFO:apscheduler.scheduler:Scheduler has been shut down
 WARNING:telegram.ext.updater:Exiting immediately!
 INFO:root:Бот стартовал
 INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 12, in club
-    user_say = update.message.textsplit()
-AttributeError: 'Message' object has no attribute 'textsplit'
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 12, in club
-    user_say = update.message.textsplit()
-AttributeError: 'Message' object has no attribute 'textsplit'
 INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
 INFO:apscheduler.scheduler:Scheduler has been shut down
 WARNING:telegram.ext.updater:Exiting immediately!
 INFO:root:Бот стартовал
 INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 12, in club
-    user_say = update.message.textsplit()
-AttributeError: 'Message' object has no attribute 'textsplit'
-INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
-INFO:apscheduler.scheduler:Scheduler has been shut down
-WARNING:telegram.ext.updater:Exiting immediately!
-INFO:root:Бот стартовал
-INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 12, in club
-    user_say = update.message.textsplit()
-AttributeError: 'Message' object has no attribute 'textsplit'
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 12, in club
-    user_say = update.message.textsplit()
-AttributeError: 'Message' object has no attribute 'textsplit'
-INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
-INFO:apscheduler.scheduler:Scheduler has been shut down
-WARNING:telegram.ext.updater:Exiting immediately!
-INFO:root:Бот стартовал
-INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 15, in club
-    session = vk.Session(access_token=token)
-NameError: name 'token' is not defined
-INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
-INFO:apscheduler.scheduler:Scheduler has been shut down
-WARNING:telegram.ext.updater:Exiting immediately!
-INFO:root:Бот стартовал
-INFO:apscheduler.scheduler:Scheduler started
-ERROR:telegram.ext.dispatcher:No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\dispatcher.py", line 432, in process_update
-    handler.handle_update(update, self, check, context)
-  File "c:\projects\Diplom\env\lib\site-packages\telegram\ext\handler.py", line 156, in handle_update
-    return self.callback(update, context)
-  File "c:\projects\Diplom\handlers.py", line 15, in club
-    if user_say[1].capitalize() == "Mutabor":
-IndexError: list index out of range
 INFO:telegram.ext.updater:Received signal 2 (SIGINT), stopping...
 INFO:apscheduler.scheduler:Scheduler has been shut down
 WARNING:telegram.ext.updater:Exiting immediately!
