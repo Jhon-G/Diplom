@@ -1,19 +1,37 @@
 import vk
-import settings
+from datetime import datetime as dt
+from rutimeparser import parse
+from utils import session_api, main_keyboard
+
 
 def start(update, context):
     print('Вазван/Start')
     user_name = update.effective_user.first_name
     update.message.reply_text(
-        f'Привет {user_name}!'
+        f'Привет {user_name}!', reply_markup=main_keyboard()
     )
+
+def get_wall_posts():
+    api = session_api()
+    today = dt.now().strftime('%Y-%m-%d')
+    wall_posts = api.wall.get(domain='mutabor.moscow', count=10)
+    posts = wall_posts['items']
+    return posts , today
 
 def club(update, context):
     print('Вазван/Club')
-    user_say = update.message.text.split()
-    if user_say[1].capitalize() == "Mutabor":
-        session = vk.Session(access_token=settings.VK_TOKEN)
-        api = vk.API(session, v=5.126)
-        res = api.wall.get(domain='mutabor.moscow', count= 1)
-        result = res['items'][0]['text']
-        update.message.reply_text(result)
+    user_say = update.message.text
+    if 'Mutabor' or 'mutabor' in user_say:
+        posts, today = get_wall_posts()
+        for i in range(len(posts)):
+            concert = posts[i]['text']
+            concert_date = parse(concert).strftime('%Y-%m-%d')
+            if concert_date != None and today < concert_date:
+                concert_info = (f'Блищайшее мероприятие: {concert}')
+                break
+            elif concert_date == today:
+                concert_info = (f'Сегодня: {concert}')
+                break
+            else:
+                concert_info = (f'Информация не найдена')
+    update.message.reply_text(concert_info, reply_markup=main_keyboard())
