@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 settings.py
-bot_log
+bot.log
 test.py

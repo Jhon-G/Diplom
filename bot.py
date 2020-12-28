@@ -3,14 +3,15 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from handlers import start, club
 import settings
 
-logging.basicConfig(filename='bot_log', level=logging.INFO)
+logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 def main():
-    my_bot = Updater(settings.API_KEY, use_context=True) # Создаем бота и передаем ему ключ для авторизации на серверах Telegram
+    my_bot = Updater(settings.API_KEY, use_context=True)
 
     dp = my_bot.dispatcher
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('Club', club))
+    dp.add_handler(MessageHandler(Filters.regex('^(Mutabor)$'), club))
 
     logging.info('Бот стартовал')
 
