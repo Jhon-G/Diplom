@@ -1,5 +1,4 @@
-import vk
-from datetime import datetime, date
+from datetime import date, timedelta
 from rutimeparser import parse
 from utils import session_api, main_keyboard
 
@@ -14,7 +13,7 @@ def start(update, context):
 
 def get_wall_posts(domain=''):
     api = session_api()
-    wall_posts = api.wall.get(domain=domain, count=10) #domain is name of group https://vk.com/ "mutabor.moscow", count if how many posts from group we take
+    wall_posts = api.wall.get(domain=domain, count=10)  # domain is name of group https://vk.com/ "mutabor.moscow", count if how many posts from group we take
     posts = wall_posts['items']
     return posts
 
@@ -22,23 +21,23 @@ def get_wall_posts(domain=''):
 def clear_posts_text_to_parse(domain=''):
     posts = get_wall_posts(domain=domain)
     for post in posts:
-            concert = post['text']
-            if 'лет' in concert:
-                clear_concert_text = concert.replace('лет', '') #here we reaplace word 'years' becouse parser get mistake 
-                concert_date = parse(clear_concert_text)
-                return concert, concert_date
-            elif '|' in concert: # we split text to create list where [1] object will be date "day(1) mounth(january)" and here we miss posts without "|" char
-                clear_concert_text = concert.split('|')
-                concert_date = parse(clear_concert_text[1])
-                return concert, concert_date
+        concert = post['text']
+        if 'лет' in concert:
+            clear_concert_text = concert.replace('лет', '')  # here we reaplace word 'years' becouse parser get mistake
+            concert_date = parse(clear_concert_text)
+            return concert, concert_date
+        elif '|' in concert:  # we split text to create list where [1] object will be date "day(1) mounth(january)" and here we miss posts without "|" char
+            clear_concert_text = concert.split('|')
+            concert_date = parse(clear_concert_text[1])
+            return concert, concert_date
 
 
 def concert_info(domain=''):
     today = date.today()
     concert, concert_date = clear_posts_text_to_parse(domain=domain)
-    if concert_date.year != today.year: # if parser find date with year == 2022 we correct this to 2021
+    if concert_date.year != today.year:  # if parser find date with year == 2022 we correct this to 2021
         concert_date = concert_date - timedelta(days=365)
-    if concert_date != None and type(concert_date) is date:
+    if concert_date is not None and type(concert_date) is date:
         if today == concert_date and abs(concert_date - today).days == 0:
             return f'Сегодня: {concert}'
         elif today < concert_date and abs(concert_date - today).days == 1:

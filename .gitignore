@@ -131,3 +131,4 @@ dmypy.json
 settings.py
 bot.log
 test.py
+.vscode
