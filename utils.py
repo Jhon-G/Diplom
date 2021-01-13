@@ -9,5 +9,6 @@ def session_api():
 
 def main_keyboard():
     return ReplyKeyboardMarkup([
-        ['Mutabor']
+        ['Mutabor'],
+        ['Random']
     ])

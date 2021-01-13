@@ -12,6 +12,7 @@ def main():
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('Club', club))
     dp.add_handler(MessageHandler(Filters.regex('^(Mutabor)$'), club))
+    dp.add_handler(MessageHandler(Filters.regex('^(Random)$'), club))
 
     logging.info('Бот стартовал')
 
