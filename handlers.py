@@ -1,4 +1,4 @@
-from utils import get_from_redis_DB, today_date, main_keyboard, date
+from utils import get_from_redis_db, today_date, main_keyboard, date
 
 
 def start(update, context):
@@ -11,7 +11,7 @@ def start(update, context):
 
 def concert_info(domain=''):
     today = today_date()
-    concert, concert_date = get_from_redis_DB(domain=domain)
+    concert, concert_date = get_from_redis_db(domain=domain)
     if type(concert_date) is date:
         if today < concert_date and abs(concert_date - today).days >= 3:
             return(f'Ближайшее мероприятие: {concert}')
