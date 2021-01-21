@@ -1,7 +1,8 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import vk
 import settings
-from telegram import ReplyKeyboardMarkup
+from telegram import (ReplyKeyboardMarkup, InlineKeyboardButton,
+                      InlineKeyboardMarkup)
 import redis3
 from rutimeparser import parse
 
@@ -38,29 +39,35 @@ def clear_posts_text_to_parse(domain=''):
     if 'rndm.club' in domain:
         for post in reversed(posts):
             post_text = post['text']
+            post_date = datetime.utcfromtimestamp(post['date']).date().year
+            # if post date is 2020 year we skip that post and take next
+            if post_date == today.year:
             # we split text to create list where [1] object will be date ->
             # "day(1) mounth(january)" and here we miss posts without "|" char
-            if '|' in post_text.replace('год', '').replace('лет', ''):
-                clear_concert_text = post_text.split('|', 2)
-                concert_date = parse(clear_concert_text[1], allowed_results=(date, None))
+                if '|' in post_text.replace('год', '').replace('лет', ''):
+                    clear_concert_text = post_text.split('|', 2)
+                    concert_date = parse(clear_concert_text[1], allowed_results=(date, None))
+                    if concert_date >= today:
+                        text_date = (post_text, concert_date)
+                        concert = text_date[0]
+                        concert_date = text_date[1]
+                        return concert, concert_date
+
+    elif 'mutabor.moscow' in domain:
+        for post in reversed(posts):
+            post_text = post['text']
+            post_date = datetime.utcfromtimestamp(post['date']).date().year
+            # if post date is 2020 year we skip that post and take next
+            if post_date == today.year:
+                # here we reaplace word 'years' becouse parser get mistake
+                clear_concert_text = post_text.replace('лет', '').replace('год', '')
+                concert_date = parse(clear_concert_text, allowed_results=(date, None))
+                post_text, concert_date = correct_parsed_date(post_text, concert_date, today)
                 if concert_date >= today:
                     text_date = (post_text, concert_date)
                     concert = text_date[0]
                     concert_date = text_date[1]
                     return concert, concert_date
-
-    elif 'mutabor.moscow' in domain:
-        for post in reversed(posts):
-            post_text = post['text']
-            # here we reaplace word 'years' becouse parser get mistake
-            clear_concert_text = post_text.replace('лет', '').replace('лет', '')
-            concert_date = parse(clear_concert_text, allowed_results=(date, None))
-            post_text, concert_date = correct_parsed_date(post_text, concert_date, today)
-            if concert_date >= today:
-                text_date = (post_text, concert_date)
-                concert = text_date[0]
-                concert_date = text_date[1]
-                return concert, concert_date
 
 
 def correct_parsed_date(post_text, concert_date, today):
@@ -110,5 +117,16 @@ def redis_db(name='', domain=''):
 def main_keyboard():
     return ReplyKeyboardMarkup([
         ['Mutabor'],
-        ['Random']
+        ['Random'],
     ])
+
+
+def how_go_to(location, address):
+    keyboard = [
+        [
+            InlineKeyboardButton('Как добратсья', callback_data=location),  # 'Location'
+        ], [
+            InlineKeyboardButton('Адрес и метро', callback_data=address)  # 'Address'
+        ]
+    ]
+    return InlineKeyboardMarkup(keyboard)

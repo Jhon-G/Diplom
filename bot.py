@@ -1,6 +1,7 @@
 import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from handlers import start, club
+from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
+                          CallbackQueryHandler)
+from handlers import start, club, send_location
 import settings
 
 logger = logging.basicConfig(filename='bot.log', level=logging.INFO)
@@ -14,6 +15,7 @@ def main():
     dp.add_handler(CommandHandler('Club', club))
     dp.add_handler(MessageHandler(Filters.regex('^(Mutabor)$'), club))
     dp.add_handler(MessageHandler(Filters.regex('^(Random)$'), club))
+    dp.add_handler(CallbackQueryHandler(send_location))
 
     logging.info('Бот стартовал')
 
