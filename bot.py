@@ -1,6 +1,9 @@
 import logging
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          CallbackQueryHandler)
+from telegram.ext import (
+    Updater, CommandHandler,
+    MessageHandler, Filters,
+    CallbackQueryHandler
+    )
 from handlers import start, club, send_location
 import settings
 

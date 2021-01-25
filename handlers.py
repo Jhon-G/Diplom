@@ -1,9 +1,16 @@
-from utils import (get_from_redis_db, today_date, main_keyboard, date,
-                   how_go_to)
-from clubs_address import address
+from utils import (
+    get_from_redis_db,
+    today_date, main_keyboard,
+    date, how_go_to_keyboard
+    )
+from clubs_address import ADDRESS
 
 
 def start(update, context):
+    '''Command to start the bot, and tell user what he can do
+
+    The bot takes the user name to address by nickname
+    '''
     print('Вазван/Start')
     user_name = update.effective_user.first_name
     update.message.reply_text(
@@ -11,19 +18,27 @@ def start(update, context):
     )
 
 
-def concert_info(place, domain=''):
+def concert_info(place, domain):
+    '''Create message and count days left for concert
+
+     1. Request for database to set variables(concert and concert_date)
+     2. Count days left for concert
+     3. Return fstring with place name and concert info
+    '''
     today = today_date()
     concert, concert_date = get_from_redis_db(domain=domain)
     place_name = place
     if type(concert_date) is date:
-        if today < concert_date and abs(concert_date - today).days >= 3:
-            return(f'Ближайшее мероприятие в {place_name} |\n {concert}')
-        elif today == concert_date and abs(concert_date - today).days == 0:
+        # Count days left for concert
+        days_left_for_concert = abs(concert_date - today).days
+        if today == concert_date and days_left_for_concert == 0:
             return(f'Сегодня в {place_name} |\n {concert}')
-        elif today < concert_date and abs(concert_date - today).days == 1:
+        elif today < concert_date and days_left_for_concert == 1:
             return(f'Завтра в {place_name} |\n {concert}')
-        elif today < concert_date and abs(concert_date - today).days == 2:
+        elif today < concert_date and days_left_for_concert == 2:
             return(f'После завтра в {place_name} |\n {concert}')
+        elif today < concert_date and days_left_for_concert >= 3:
+            return(f'Ближайшее мероприятие в {place_name} |\n {concert}')
         else:
             return('Информация не найдена или нет объявленных концертов')
     else:
@@ -31,6 +46,13 @@ def concert_info(place, domain=''):
 
 
 def club(update, context):
+    '''Sending concert info to user
+
+    Take user message with name of place
+    set the variable place to use it in concer_info function,
+    then go variables (Location, address), that needed for arguments at 
+    'how_go_to_keyboard' function
+    '''
     print('Вазван/Club')
     user_say = update.message.text.lower()
 
@@ -46,23 +68,37 @@ def club(update, context):
         address = 'Random Address'
         concert = concert_info(domain='rndm.club', place=place_name)
 
-    update.message.reply_text(concert, reply_markup=how_go_to(location, address))
+    update.message.reply_text(concert, reply_markup=how_go_to_keyboard(location, address))
 
 
 def send_location(update, context):
+    ''' Send location as map and address as text
+
+    Take request and then set the variable
+    Use 'place' to take data from dict with keys Mutabor and Random,
+    and values in format, list with tuple at 0 index and text with index 1
+    '''
     update.callback_query.answer()
     request = update.callback_query.data
 
     if 'Random Location' in request:
         place = 'Random'
-        update.callback_query.message.reply_location(latitude=address[place][0][0], longitude=address[place][0][1])
+        latitude = ADDRESS[place][0][0]
+        longitude = ADDRESS[place][0][1]
+
+        update.callback_query.message.reply_location(latitude, longitude)
     elif 'Random Address' in request:
         place = 'Random'
-        update.callback_query.message.reply_text(address[place][1])
+        address = ADDRESS[place][1]
+        update.callback_query.message.reply_text(address)
 
     if 'Mutabor Location' in request:
-        place = 'Random'
-        update.callback_query.message.reply_location(latitude=address[place][0][0], longitude=address[place][0][1])
+        place = 'Mutabor'
+        latitude = ADDRESS[place][0][0]
+        longitude = ADDRESS[place][0][1]
+
+        update.callback_query.message.reply_location(latitude, longitude)
     elif 'Mutabor Address' in request:
-        place = 'Random'
-        update.callback_query.message.reply_text(address[place][1])
+        place = 'Mutabor'
+        address = ADDRESS[place][1]
+        update.callback_query.message.reply_text(address)
