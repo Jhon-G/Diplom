@@ -1,9 +1,9 @@
 from utils import (
-    get_from_redis_db,
     today_date, main_keyboard,
     date, how_go_to_keyboard
     )
 from clubs_address import ADDRESS
+from sqlite_db import get_from_db
 
 
 def start(update, context):
@@ -12,9 +12,10 @@ def start(update, context):
     The bot takes the user name to address by nickname
     '''
     print('Вазван/Start')
+    chat_id = update.effective_chat.id
     user_name = update.effective_user.first_name
     update.message.reply_text(
-        f'Привет {user_name}!', reply_markup=main_keyboard()
+        f'Привет {user_name}, {chat_id}!', reply_markup=main_keyboard()
     )
 
 
@@ -26,7 +27,7 @@ def concert_info(place, domain):
      3. Return fstring with place name and concert info
     '''
     today = today_date()
-    concert, concert_date = get_from_redis_db(domain=domain)
+    concert, concert_date = get_from_db(domain=domain)
     place_name = place
     if type(concert_date) is date:
         # Count days left for concert
@@ -76,29 +77,32 @@ def send_location(update, context):
 
     Take request and then set the variable
     Use 'place' to take data from dict with keys Mutabor and Random,
-    and values in format, list with tuple at 0 index and text with index 1
+    and values in format, dict with key lacotion : value (tuple) and key address : value text
     '''
     update.callback_query.answer()
     request = update.callback_query.data
 
+    location = 'location'
+    address = 'address'
+
     if 'Random Location' in request:
         place = 'Random'
-        latitude = ADDRESS[place][0][0]
-        longitude = ADDRESS[place][0][1]
+        latitude = ADDRESS[place][location][0]
+        longitude = ADDRESS[place][location][1]
 
         update.callback_query.message.reply_location(latitude, longitude)
     elif 'Random Address' in request:
         place = 'Random'
-        address = ADDRESS[place][1]
+        address = ADDRESS[place][address]
         update.callback_query.message.reply_text(address)
 
     if 'Mutabor Location' in request:
         place = 'Mutabor'
-        latitude = ADDRESS[place][0][0]
-        longitude = ADDRESS[place][0][1]
+        latitude = ADDRESS[place][location][0]
+        longitude = ADDRESS[place][location][1]
 
         update.callback_query.message.reply_location(latitude, longitude)
     elif 'Mutabor Address' in request:
         place = 'Mutabor'
-        address = ADDRESS[place][1]
+        address = ADDRESS[place][address]
         update.callback_query.message.reply_text(address)
