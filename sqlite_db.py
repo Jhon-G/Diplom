@@ -3,20 +3,26 @@ from utils import (today_date, correcting_parsed_data,
 from models import Event
 
 
-def get_from_db(domain):
+def request_to_database(domain):
+    name = set_name_to_request_to_database(domain)
+
+    concert, concert_date = sqlite_db(name=name, domain=domain)
+
+    return concert, concert_date
+
+
+def set_name_to_request_to_database(domain):
     if 'mutabor' in domain:
         name = 'mutabor'
-        concert, concert_date = sqlite_db(name=name, domain=domain)
     elif 'rndm.club' in domain:
         name = 'random'
-        concert, concert_date = sqlite_db(name=name, domain=domain)
-    return concert, concert_date
+    return(name)
 
 
 def sqlite_db(name, domain):
     event = Event()
     today = today_date()
-    has_place = event.exsits(name)
+    has_place = event.is_exists(name)
     if (has_place) is not True:
         concert, concert_date = clearing_posts_text_to_parse(domain=domain)
         if concert_date is not None and concert_date >= today:
@@ -40,3 +46,4 @@ def sqlite_db(name, domain):
                 return None, None
 
     return concert, concert_date
+

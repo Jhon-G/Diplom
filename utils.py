@@ -4,7 +4,8 @@ import settings
 from telegram import (ReplyKeyboardMarkup, InlineKeyboardButton,
                       InlineKeyboardMarkup)
 from rutimeparser import parse
-
+from clubs_address import ADDRESS
+from models import Users
 
 def today_date():
     '''
@@ -87,12 +88,15 @@ def clearing_posts_text_to_parse(domain):
             return None, None
 
     elif 'mutabor.moscow' in domain:
-        for post in posts:
+        for post in posts[::-1]:
             post_text = post['text']
             post_date = datetime.utcfromtimestamp(post['date']).date().year
             # if post date is 2020 year we skip that post and take next
             if post_date == today.year:
                 # here we reaplace word 'years' becouse parser get mistake
+                if post_text == '' and bool(post.get('copy_history')) is True:
+                    # if post was reposted from another group, take info from
+                    post_text = post['copy_history'][0]['text']
                 clear_concert_text = post_text.replace('лет', '').replace('год', '')
                 date_from_post = parse(clear_concert_text, allowed_results=(date, None))
                 post_text, concert_date = correcting_parsed_data(post_text, date_from_post, today)
@@ -119,7 +123,8 @@ def correcting_parsed_data(post_text, date_from_post, today):
         elif date_from_post.year == today.year:
             correct_date = date_from_post
             return post_text, correct_date
-
+    else:
+        return None, None
 
 def concert_text_and_date(post_text, concert_date, today):
     '''
@@ -137,23 +142,69 @@ def main_keyboard():
     return ReplyKeyboardMarkup([
         ['Mutabor'],
         ['Random'],
+        ['Мои подписки']
     ])
 
 
-def how_go_to_keyboard(location, address):
+def how_go_to_keyboard(location, address, place_name, chat_id):
     ''' Inline keyboard for building a path to the club or find out the address
 
-    Arguments (location, address) direct by club function
+    Arguments (location, address, place_name, chat_id) direct by club function
     '''
+    button_text, callback = set_how_to_go_keyboard(chat_id, place_name)
+
     keyboard = [
         [
             InlineKeyboardButton('Как добратсья', callback_data=location),  # 'Location'
         ], [
             InlineKeyboardButton('Адрес и метро', callback_data=address)  # 'Address'
         ], [
-            InlineKeyboardButton('Подписатся', callback_data=1)
-        ], [
-            InlineKeyboardButton('Отписаться', callback_data=0)
+            InlineKeyboardButton(button_text, callback_data=callback)
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
+
+
+def location(place):
+    location = 'location'
+
+    latitude = ADDRESS[place][location][0]
+    longitude = ADDRESS[place][location][1]
+    return latitude, longitude
+
+
+def address(place):
+    address = 'address'
+    address = ADDRESS[place][address]
+    return address
+
+
+def set_how_to_go_keyboard(chat_id, place_name):
+    users = Users()
+
+    mutabor, random = users.is_exists_subscribe(chat_id)
+
+    if place_name == 'Mutabor' and mutabor is True:
+        button_text = 'Отписаться'
+        callback = '0_'+place_name
+
+    elif place_name == 'Mutabor' and mutabor is not True:
+        button_text = 'Подписаться'
+        callback = '1_'+place_name
+
+    if place_name == 'Random' and random is True:
+        button_text = 'Отписаться'
+        callback = '0_'+place_name
+
+    elif place_name == 'Random' and random is not True:
+        button_text = 'Подписаться'
+        callback = '1_'+place_name
+
+    return button_text, callback
+
+
+def set_place_name(place_name):
+    if place_name == 'Mutabor':
+        return 'Mutabor'
+    elif place_name == 'Random':
+        return 'Random'
